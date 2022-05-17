@@ -1,0 +1,302 @@
+:root {
+  --bs-main: #0d6efd;
+  --bs-main-deep: #6610f2;
+  --bs-blue: #0d6efd;
+  --bs-indigo: #6610f2;
+  --bs-purple: #6f42c1;
+  --bs-pink: #d63384;
+  --bs-red: #dc3545;
+  --bs-orange: #fd7e14;
+  --bs-yellow: #ffc107;
+  --bs-green: #198754;
+  --bs-teal: #20c997;
+  --bs-cyan: #0dcaf0;
+  --bs-white: #fff;
+  --bs-gray: #6c757d;
+  --bs-gray-dark: #343a40;
+  --bs-gray-100: #f8f9fa;
+  --bs-gray-200: #e9ecef;
+  --bs-gray-300: #dee2e6;
+  --bs-gray-400: #ced4da;
+  --bs-gray-500: #adb5bd;
+  --bs-gray-600: #6c757d;
+  --bs-gray-700: #495057;
+  --bs-gray-800: #343a40;
+  --bs-gray-900: #212529;
+  --bs-primary: #0d6efd;
+  --bs-secondary: #6c757d;
+  --bs-success: #198754;
+  --bs-info: #0dcaf0;
+  --bs-warning: #ffc107;
+  --bs-danger: #dc3545;
+  --bs-light: #f8f9fa;
+  --bs-dark: #212529;
+  --bs-primary-rgb: 13, 110, 253;
+  --bs-secondary-rgb: 108, 117, 125;
+  --bs-success-rgb: 25, 135, 84;
+  --bs-info-rgb: 13, 202, 240;
+  --bs-warning-rgb: 255, 193, 7;
+  --bs-danger-rgb: 220, 53, 69;
+  --bs-light-rgb: 248, 249, 250;
+  --bs-dark-rgb: 33, 37, 41;
+  --bs-white-rgb: 255, 255, 255;
+  --bs-black-rgb: 0, 0, 0;
+  --bs-body-color-rgb: 33, 37, 41;
+  --bs-body-bg-rgb: 255, 255, 255;
+  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+  --bs-body-font-family: var(--bs-font-sans-serif);
+  --bs-body-font-size: 1rem;
+  --bs-body-font-weight: 400;
+  --bs-body-line-height: 1.5;
+  --bs-body-color: #212529;
+  --bs-body-bg: #fff;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+a {
+  color: var(--bs-body-color);
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--bs-light);
+}
+
+main {
+  margin-top: 4em;
+}
+
+section {
+  max-width: 1000px;
+  width: 100%;
+  padding: 1em;
+}
+
+.section2 {
+  width: 100%;
+}
+
+.menu1 {
+  display: none;
+}
+
+@media screen and (min-width: 600px) { /* min-width: 768px */
+  .section2 {
+    width: 50%;
+  }
+
+  .menu1 {
+    display: block;
+  }
+}
+
+/* DH Header*/
+.dh-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0.5em 1em;
+  background-color: var(--bs-white);
+  border-bottom: 1px solid var(--bs-gray-200);
+}
+
+/* DH Table */
+.dh-table {
+  background-color: var(--bs-white);
+}
+
+.dh-table-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.6em 0.5em;
+  border-radius: 0.25em;
+  background-color: var(--bs-main);
+}
+
+.dh-table-header>div {
+  flex: 1 1;
+  padding: 0 0.5em;
+  color: var(--bs-white);
+  font-weight: bold;
+}
+
+.dh-table-body {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.3em 0.5em;
+  border-bottom: 1px solid rgba(0, 0, 0, .12);
+}
+
+.dh-table-body:hover {
+  background-color: var(--bs-gray-100);
+}
+
+.dh-table-body:active {
+  background-color: var(--bs-gray-200);
+}
+
+.dh-table-body>div {
+  flex: 1 1;
+  padding: 0 0.5em;
+}
+
+.dh-table-before {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1.5em 0 0.5em;
+}
+
+/* DH Title */
+.dh-title {
+  margin: 0.5em 0 1em;
+  font-weight: bold;
+}
+
+.dh-title::before {
+  content: "";
+  padding-right: 0.3em;
+  margin-right: 0.3em;
+  background-color: var(--bs-main);
+}
+
+/* DH Search */
+.dh-search {
+  margin: 1em 0;
+  padding: 1em;
+  background-color: var(--bs-body-bg);
+  border: 1px solid var(--bs-body-color);
+  border-radius: 0.25em;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+/* dropdown-menu */
+.dropdown-menu {}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: var(--bs-gray-100);
+}
+
+/* Custom Icon */
+.icon-arrow-left {
+  width: 25px;
+  height: 25px;
+  background: url(../img/arrow-left.svg) no-repeat;
+  background-size: cover;
+  display: inline-block;
+}
+
+.icon-chevro-left {
+  width: 25px;
+  height: 25px;
+  background: url(../img/chevron-left.svg) no-repeat;
+  background-size: cover;
+  display: inline-block;
+}
+
+.icon-list {
+  width: 25px;
+  height: 25px;
+  background: url(../img/list.svg) no-repeat;
+  background-size: cover;
+  display: inline-block;
+}
+
+.icon-logo_thumbnail {
+  width: 35px;
+  height: 35px;
+  background: url(../img/logo_thumbnail.png) no-repeat;
+  background-size: cover;
+  display: inline-block;
+  border-radius: 0.25em;
+}
+
+.icon-logo {
+  width: 38px;
+  height: 36px;
+  background: url(../img/logo.png) no-repeat;
+  background-size: cover;
+  border-radius: 0.25em;
+  display: inline-block;
+}
+
+.icon-apple {
+  width: 50px;
+  height: 50px;
+  background: url(../img/apple.svg) no-repeat;
+  background-size: cover;
+  border-radius: 0.25em;
+  display: inline-block;
+}
+
+/* Custom button */
+.btn-primary {
+  background-color: var(--bs-main);
+  border-color: var(--bs-main);
+  color: var(--bs-white);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  border-color: var(--bs-main);
+  background-color: var(--bs-main);
+  color: var(--bs-white);
+}
+
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:active:focus,
+.btn-primary:active:hover {
+  border-color: var(--bs-main-deep);
+  background-color: var(--bs-main-deep);
+  color: var(--bs-white);
+}
+
+.btn-outline-primary {
+  border-color: var(--bs-white);
+  color: var(--bs-main);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  border-color: var(--bs-main);
+  background-color: var(--bs-main);
+  color: var(--bs-white);
+}
+
+.btn-outline-primary:active,
+.btn-outline-primary:visited,
+.btn-outline-primary:active:focus,
+.btn-outline-primary:active:hover {
+  border-color: var(--bs-main);
+  background-color: var(--bs-main);
+  color: var(--bs-white);
+}
+
+.btn-margin {
+  margin: 0 0.2em;
+}
+
+/* Custom pagination */
+.page-link {
+  color: var(--bs-main);
+}
+
+/* Custom Checkbox */
+.form-check-input:checked {
+  background-color: var(--bs-main-deep);
+  border-color: var(--bs-main-deep);
+}
