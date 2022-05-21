@@ -13,31 +13,31 @@
                 <div class="col-4">
                     <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
                     <datalist id="datalistOptions">
-                        <option value="San Francisco">
-                        <option value="New York">
-                        <option value="Seattle">
-                        <option value="Los Angeles">
-                        <option value="Chicago">
+                        <option th:each="tag : ${tags}" th:value="${tag.name}">
                     </datalist>
                 </div>
                 <div class="col-auto">
-                    <button type="button" class="btn btn-primary">Seach</button>
+                    <button type="button" class="btn btn-primary" th:onclick="addSearch()">AddSearch</button>
+                    <button type="button" class="btn btn-primary" th:onclick="search()">Search</button>
                 </div>
             </div>
         </div>
         
-        <div class="container-fluid">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
-                <div class="col" th:each="num : ${#numbers.sequence(1, 20)}">
-                    <div class="card">
-                        <img th:src="@{/img/test01.jpg}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">
-                                <ins>#태그1</ins>
-                                <ins>#태그2</ins>
-                                <ins>#태그3</ins>
-                            </p>
+        <div id="resultDiv">
+            <div>
+                검색조건 : <span th:each="tag : ${searchTags}" th:onclick="deleteSearch([[${tag}]])">[[${tag}]] (x)</span>
+            </div>
+            <div class="container-fluid">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                    <div class="col" th:each="board : ${boards}">
+                        <div class="card">
+                            <img th:src="@{/img/test01.jpg}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">[[${board.title}]]</h5>
+                                <p class="card-text">
+                                    <span th:each="tag : ${board.boardTags}">[[${tag.tag.name}]] </span>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -46,6 +46,7 @@
     </main>
 
     <footer th:replace="fragments/common :: footer"></footer>
+    <script src="/js/boards.js"></script>
 </body>
 
 </html>

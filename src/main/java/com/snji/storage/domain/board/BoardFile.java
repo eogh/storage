@@ -1,5 +1,6 @@
 package com.snji.storage.domain.board;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.snji.storage.domain.BaseTimeEntity;
 import lombok.*;
 
@@ -17,6 +18,7 @@ public class BoardFile extends BaseTimeEntity {
     @Column(name = "BOARD_FILE_ID")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BOARD_ID")
     private Board board;

@@ -1,6 +1,5 @@
 package com.snji.storage.domain.board;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.snji.storage.domain.BaseTimeEntity;
 import lombok.*;
 
@@ -24,11 +23,9 @@ public class Board extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<BoardFile> boardFiles = new ArrayList<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<BoardTag> boardTags = new ArrayList<>();
 }
