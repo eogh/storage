@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 @ToString(exclude = {"boardFiles", "boardTags"})
 public class Board extends BaseTimeEntity {

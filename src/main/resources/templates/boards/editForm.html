@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: html-head"></head>
+
+<body class="d-flex flex-column h-100">
+<header th:replace="fragments/common :: header(title='boards')"></header>
+
+<main>
+    <div class="container">
+
+        <form action="" th:action th:object="${boardSaveForm}" enctype="multipart/form-data" method="post">
+            Edit Form: [[${board.title}]]
+        </form>
+    </div>
+</main>
+
+<footer th:replace="fragments/common :: footer"></footer>
+</body>
+
+</html>

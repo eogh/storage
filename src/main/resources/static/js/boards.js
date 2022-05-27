@@ -25,6 +25,7 @@ var findBoards = () => {
         },
         success: function (fragment) {
             $('#resultDiv').replaceWith(fragment);
+            render();
         },
         error: function (error) {
             console.error(`Error: ${error}`);
@@ -33,8 +34,9 @@ var findBoards = () => {
 }
 
 var addTag = (tag) => {
-    if (!tags.includes(tag)) {
+    if (tag != '' && !tags.includes(tag)) {
         tags.push(tag);
+        findBoards();
     }
 }
 
@@ -43,29 +45,60 @@ var deleteTag = (tag) => {
 
     if (index >= 0) {
         tags.splice(index, 1);
+        findBoards();
     }
+}
+
+var render = () => {
+    let view = '';
+
+    tags.forEach(element => {
+        view += `<li type="button" class="list-inline-item" onclick="clickDeleteSearch('${element}')">#${element} <i class="bi bi-x-circle"></i></li>`;
+    });
+
+    $('#resultDiv2').replaceWith(`<ul class="list-inline" id="resultDiv2">${view}</ul>`);
 }
 
 var clearTag = () => {
     tags = [];
 }
 
-var addSearch = () => {
-    let value = document.getElementById('exampleDataList').value;
-
-    addTag(value);
-    findBoards();
+var setInputValue = (value) => {
+    document.getElementById('exampleDataList').value = value;
 }
 
-var search = () => {
-    let value = document.getElementById('exampleDataList').value;
+var getInputValue = () => {
+    return document.getElementById('exampleDataList').value;
+}
 
+var clickAddSearch = () => {
+    addTag(getInputValue());
+    setInputValue('');
+}
+
+var clickSearch = (tag) => {
     clearTag();
-    addTag(value);
-    findBoards();
+    addTag(tag||getInputValue());
+    setInputValue('');
 }
 
-var deleteSearch = (tag) => {
+var clickDeleteSearch = (tag) => {
     deleteTag(tag);
-    findBoards();
 }
+
+const exampleModal = document.getElementById('exampleModal')
+exampleModal.addEventListener('show.bs.modal', event => {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    const recipient = button.getAttribute('data-bs-whatever')
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    // Update the modal's content.
+    const modalTitle = exampleModal.querySelector('.modal-title')
+    const modalBodyInput = exampleModal.querySelector('.modal-body input')
+
+    // modalTitle.textContent = `New message to ${recipient}`
+    modalBodyInput.value = recipient
+})

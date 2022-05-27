@@ -5,47 +5,54 @@
 <head th:replace="fragments/common :: html-head"></head>
 
 <body class="d-flex flex-column h-100">
-    <header th:replace="fragments/common :: header(title='게시판')"></header>
+    <header th:replace="fragments/common :: header(title='boards')"></header>
 
     <main>
-        <div class="container">
-            게시판 상세
+        <div class="container py-3">
+            <div class="card" th:object="${board}">
+                <div id="carouselIndicators" class="carousel slide p-1" data-bs-ride="true">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselIndicators" data-bs-slide-to="0" class="active"></button>
+                        <button type="button" data-bs-target="#carouselIndicators" data-bs-slide-to="1"></button>
+                        <button type="button" data-bs-target="#carouselIndicators" data-bs-slide-to="2"></button>
+                        <button type="button" data-bs-target="#carouselIndicators" data-bs-slide-to="3"></button>
+                    </div>
+    
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img th:src="@{/img/test01.jpg}" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img th:src="@{/img/test02.jpg}" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img th:src="@{/img/test03.jpg}" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img th:src="@{/img/test04h.jpg}" class="d-block w-100" alt="...">
+                        </div>
+                    </div>
+    
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselIndicators"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselIndicators"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
 
-            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
-                        class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
-                        aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
-                        aria-label="Slide 3"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3"
-                        aria-label="Slide 4"></button>
+                <div class="card-body">
+                    <h5 class="card-title d-flex justify-content-between">
+                        [[${board.title}]]<a th:href="@{/boards/{id}/edit (id=${board.id})}"><i class="bi bi-pencil-square"></i></a>
+                    </h5>
+                    <ul class="list-inline">
+                        <li class="list-inline-item" th:each="tag : ${board.boardTags}">#[[${tag.tag.name}]]</li>
+                    </ul>
                 </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img th:src="@{/img/test01.jpg}" class="d-block w-100" alt="...">
-                    </div>
-                    <div class="carousel-item">
-                        <img th:src="@{/img/test02.jpg}" class="d-block w-100" alt="...">
-                    </div>
-                    <div class="carousel-item">
-                        <img th:src="@{/img/test03.jpg}" class="d-block w-100" alt="...">
-                    </div>
-                    <div class="carousel-item">
-                        <img th:src="@{/img/test04h.jpg}" class="d-block w-100" alt="...">
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-                    data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-                    data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
             </div>
         </div>
     </main>

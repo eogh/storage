@@ -5,40 +5,69 @@
 <head th:replace="fragments/common :: html-head"></head>
 
 <body class="d-flex flex-column h-100">
-    <header th:replace="fragments/common :: header(title='게시판')"></header>
+    <header th:replace="fragments/common :: header(title='boards')"></header>
 
     <main>
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-4">
-                    <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
-                    <datalist id="datalistOptions">
-                        <option th:each="tag : ${tags}" th:value="${tag.name}">
-                    </datalist>
+        <datalist id="datalistOptions">
+            <option th:each="tag : ${tags}" th:value="${tag.name}">
+        </datalist>
+
+        <div class="container py-4">
+            <div class="card text-center">
+                <div class="card-header">Search</div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input type="text" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
+                        <button type="button" class="btn btn-secondary" th:onclick="clickSearch()"><i class="bi bi-search"></i></button>
+                        <button type="button" class="btn btn-secondary" th:onclick="clickAddSearch()"><i class="bi bi-plus-lg"></i></button>
+                    </div>
                 </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-primary" th:onclick="addSearch()">AddSearch</button>
-                    <button type="button" class="btn btn-primary" th:onclick="search()">Search</button>
+                <div class="card-footer">
+                    <div id="resultDiv2"></div>
                 </div>
             </div>
         </div>
         
         <div id="resultDiv">
-            <div>
-                검색조건 : <span th:each="tag : ${searchTags}" th:onclick="deleteSearch([[${tag}]])">[[${tag}]] (x)</span>
-            </div>
             <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center py-1">
+                    <span>Total: [[${size}]]</span>
+                    <a role="button" class="btn btn-sm btn-primary" th:href="@{/boards/add}">Add</a>
+                </div>
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
                     <div class="col" th:each="board : ${boards}">
                         <div class="card">
                             <img th:src="@{/img/test01.jpg}" class="card-img-top" alt="...">
                             <div class="card-body">
-                                <h5 class="card-title">[[${board.title}]]</h5>
-                                <p class="card-text">
-                                    <span th:each="tag : ${board.boardTags}">[[${tag.tag.name}]] </span>
-                                </p>
+                                <h5 class="card-title d-flex justify-content-between align-items-center">
+                                    [[${board.title}]]<a th:href="@{/boards/{id} (id=${board.id})}"><i class="bi bi-three-dots"></i></a>
+                                </h5>
+                                <ul class="list-inline">
+                                    <li type="button" class="list-inline-item" th:each="tag : ${board.boardTags}" th:onclick="clickSearch([[${tag.tag.name}]])">#[[${tag.tag.name}]]</li>
+                                    <li type="button" class="list-inline-item" data-bs-toggle="modal" data-bs-target="#exampleModal" th:data-bs-whatever="${board.title}">
+                                        <i class="bi bi-plus-circle"></i>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Tag</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control" list="datalistOptions" placeholder="Type to search...">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="">Add</button>
                     </div>
                 </div>
             </div>
