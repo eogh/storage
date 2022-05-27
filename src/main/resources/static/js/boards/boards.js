@@ -21,6 +21,7 @@ exampleModal.addEventListener('show.bs.modal', event => {
     // and then do the updating in a callback.
     //
     // Update the modal's content.
+    exampleModalInput.value = '';
 });
 
 var findBoards = () => {
