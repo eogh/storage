@@ -8,6 +8,10 @@
     <header th:replace="fragments/common :: header(title='boards')"></header>
 
     <main>
+        <datalist id="datalistOptions">
+            <option th:each="tag : ${tags}" th:value="${tag.name}">
+        </datalist>
+        
         <div class="container py-3">
             <div class="card" th:object="${board}">
                 <div id="carouselIndicators" class="carousel slide p-1" data-bs-ride="true">
@@ -51,13 +55,35 @@
                     </h5>
                     <ul class="list-inline">
                         <li class="list-inline-item" th:each="tag : ${board.boardTags}">#[[${tag.tag.name}]]</li>
+                        <li type="button" class="list-inline-item" data-bs-toggle="modal" data-bs-target="#exampleModal" th:data-bs-whatever="${board.id}">
+                            <i class="bi bi-plus-circle"></i>
+                        </li>
                     </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Tag</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control" list="datalistOptions" id="exampleModalInput" placeholder="Type to search...">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="clickAddTag()">Add</button>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
     <footer th:replace="fragments/common :: footer"></footer>
+    <script src="/js/boards/board.js"></script>
 </body>
 
 </html>

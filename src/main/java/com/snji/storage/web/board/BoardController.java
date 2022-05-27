@@ -1,8 +1,6 @@
 package com.snji.storage.web.board;
 
-import com.snji.storage.domain.board.Board;
-import com.snji.storage.domain.board.BoardRepository;
-import com.snji.storage.domain.board.TagRepository;
+import com.snji.storage.domain.board.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -13,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -21,6 +20,7 @@ import java.util.List;
 public class BoardController {
 
     private final BoardRepository boardRepository;
+    private final BoardTagRepository boardTagRepository;
     private final TagRepository tagRepository;
 
     @GetMapping
@@ -32,6 +32,7 @@ public class BoardController {
     @GetMapping("/{boardId}")
     public String board(@PathVariable long boardId, Model model) {
         model.addAttribute("board", boardRepository.getById(boardId));
+        model.addAttribute("tags", tagRepository.findAll());
         return "boards/board";
     }
 
@@ -88,5 +89,34 @@ public class BoardController {
         model.addAttribute("size", list.size());
 
         return "/boards/boards :: #resultDiv";
+    }
+
+    @PostMapping("/api/{boardId}/tags/add")
+    @ResponseBody
+    public String boardTagsAdd(@PathVariable Long boardId,
+                               @RequestBody @Validated BoardTagForm form, BindingResult bindingResult) {
+
+        Board board = boardRepository.findById(boardId).orElse(null);
+
+        Tag tag;
+        Optional<Tag> findTag = tagRepository.findByName(form.getTagName()).stream().findFirst();
+        if (findTag.isEmpty()) {
+            tag = tagRepository.save(Tag.builder().name(form.getTagName()).build());
+        } else {
+            tag = findTag.get();
+        }
+
+        if (board != null) {
+            if (boardTagRepository.findByBoardAndTag(board, tag).isEmpty()) {
+                boardTagRepository.save(BoardTag.builder()
+                        .board(board)
+                        .tag(tag)
+                        .build());
+            }
+        } else {
+            return "fail";
+        }
+
+        return "success";
     }
 }

@@ -2,9 +2,25 @@ var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
 
 var tags = [];
+var whatever = '';
+
+const exampleModal = document.getElementById('exampleModal');
+const exampleModalInput = document.getElementById('exampleModalInput');
+const input = document.getElementById('exampleDataList');
 
 window.addEventListener('load', (e) => {
     findBoards();
+});
+
+exampleModal.addEventListener('show.bs.modal', event => {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    whatever = button.getAttribute('data-bs-whatever')
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    // Update the modal's content.
 });
 
 var findBoards = () => {
@@ -49,6 +65,10 @@ var deleteTag = (tag) => {
     }
 }
 
+var clearTag = () => {
+    tags = [];
+}
+
 var render = () => {
     let view = '';
 
@@ -59,16 +79,13 @@ var render = () => {
     $('#resultDiv2').replaceWith(`<ul class="list-inline" id="resultDiv2">${view}</ul>`);
 }
 
-var clearTag = () => {
-    tags = [];
-}
 
 var setInputValue = (value) => {
-    document.getElementById('exampleDataList').value = value;
+    input.value = value;
 }
 
 var getInputValue = () => {
-    return document.getElementById('exampleDataList').value;
+    return input.value;
 }
 
 var clickAddSearch = () => {
@@ -86,19 +103,29 @@ var clickDeleteSearch = (tag) => {
     deleteTag(tag);
 }
 
-const exampleModal = document.getElementById('exampleModal')
-exampleModal.addEventListener('show.bs.modal', event => {
-    // Button that triggered the modal
-    const button = event.relatedTarget
-    // Extract info from data-bs-* attributes
-    const recipient = button.getAttribute('data-bs-whatever')
-    // If necessary, you could initiate an AJAX request here
-    // and then do the updating in a callback.
-    //
-    // Update the modal's content.
-    const modalTitle = exampleModal.querySelector('.modal-title')
-    const modalBodyInput = exampleModal.querySelector('.modal-body input')
+var clickAddTag = () => {
+    const boardId = whatever;
+    const inputValue = exampleModalInput.value;
 
-    // modalTitle.textContent = `New message to ${recipient}`
-    modalBodyInput.value = recipient
-})
+    let boardTagForm = {
+        tagName: inputValue
+    }
+    
+    $.ajax({
+        type: 'POST',
+        url: `/boards/api/${boardId}/tags/add`,
+        contentType: 'application/json',
+        // dataType: 'json',
+        data: JSON.stringify(boardTagForm),
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        },
+        success: function (data) {
+            console.log(data);
+            findBoards();
+        },
+        error: function (error) {
+            console.error(`Error: ${error}`);
+        }
+    });
+}
