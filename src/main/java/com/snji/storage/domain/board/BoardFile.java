@@ -23,12 +23,7 @@ public class BoardFile extends BaseTimeEntity {
     @JoinColumn(name = "BOARD_ID")
     private Board board;
 
-    @Column(nullable = false)
-    private String filename;
-
-    @Column(nullable = false)
-    private String path;
-
-    @Column(name = "THUMBNAIL_PATH")
-    private String thumbnailPath;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "FILE_ID")
+    private File file;
 }
