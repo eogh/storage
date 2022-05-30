@@ -1,6 +1,10 @@
 package com.snji.storage.web.board;
 
 import com.snji.storage.domain.board.*;
+import com.snji.storage.web.board.form.BoardSaveForm;
+import com.snji.storage.web.board.form.BoardSearchCond;
+import com.snji.storage.web.board.form.BoardTagForm;
+import com.snji.storage.web.board.form.BoardUpdateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

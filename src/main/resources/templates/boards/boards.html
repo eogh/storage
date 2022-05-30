@@ -43,7 +43,7 @@
                                     [[${board.title}]]<a th:href="@{/boards/{id} (id=${board.id})}"><i class="bi bi-three-dots"></i></a>
                                 </h5>
                                 <ul class="list-inline">
-                                    <li type="button" class="list-inline-item" th:each="tag : ${board.boardTags}" th:onclick="clickSearch([[${tag.tag.name}]])">#[[${tag.tag.name}]]</li>
+                                    <li type="button" class="list-inline-item" th:each="tag : ${board.boardTags}" th:onclick="clickAddSearch([[${tag.tag.name}]])">#[[${tag.tag.name}]]</li>
                                     <li type="button" class="list-inline-item" data-bs-toggle="modal" data-bs-target="#exampleModal" th:data-bs-whatever="${board.id}">
                                         <i class="bi bi-plus-circle"></i>
                                     </li>

@@ -1,4 +1,4 @@
-package com.snji.storage.web.board;
+package com.snji.storage.web.board.form;
 
 import lombok.Data;
 

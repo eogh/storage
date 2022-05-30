@@ -89,8 +89,8 @@ var getInputValue = () => {
     return input.value;
 }
 
-var clickAddSearch = () => {
-    addTag(getInputValue());
+var clickAddSearch = (tag) => {
+    addTag(tag||getInputValue());
     setInputValue('');
 }
 
