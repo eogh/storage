@@ -51,7 +51,11 @@
 
                 <div class="card-body">
                     <h5 class="card-title d-flex justify-content-between">
-                        [[${board.title}]]<a th:href="@{/boards/{id}/edit (id=${board.id})}"><i class="bi bi-pencil-square"></i></a>
+                        [[${board.title}]]
+                        <span>
+                            <a th:href="@{/boards/{id}/edit (id=${board.id})}"><i class="bi bi-pencil-square"></i></a>
+                            <a th:href="@{/boards/{id}/delete (id=${board.id})}"><i class="bi bi-trash"></i></a>
+                        </span>
                     </h5>
                     <ul class="list-inline">
                         <li class="list-inline-item" th:each="tag : ${board.boardTags}">#[[${tag.tag.name}]]</li>
@@ -75,7 +79,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="clickAddTag()">Add</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" th:onclick="clickAddTag()">Add</button>
                     </div>
                 </div>
             </div>

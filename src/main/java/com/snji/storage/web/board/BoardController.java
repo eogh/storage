@@ -26,6 +26,7 @@ public class BoardController {
     private final BoardRepository boardRepository;
     private final BoardTagRepository boardTagRepository;
     private final TagRepository tagRepository;
+    private final BoardFileRepository boardFileRepository;
 
     @GetMapping
     public String boards(Model model) {
@@ -77,6 +78,21 @@ public class BoardController {
     @PostMapping("/{itemId}/edit")
     public String edit(@PathVariable Long boardId, @Validated @ModelAttribute BoardUpdateForm form, BindingResult bindingResult) {
         return "";
+    }
+
+    @GetMapping("/{boardId}/delete")
+    public String delete(@PathVariable Long boardId) {
+        Board board = boardRepository.getById(boardId);
+
+        for (BoardTag boardTag : board.getBoardTags()) {
+            boardTagRepository.delete(boardTag);
+        }
+        for (BoardFile boardFile : board.getBoardFiles()) {
+            boardFileRepository.delete(boardFile);
+        }
+        boardRepository.delete(board);
+
+        return "redirect:/boards";
     }
 
     @GetMapping("/api/list")
