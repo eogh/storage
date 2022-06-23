@@ -12,8 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +27,7 @@ public class BoardController {
     private final BoardTagRepository boardTagRepository;
     private final TagRepository tagRepository;
     private final BoardFileRepository boardFileRepository;
+    private final FileRepository fileRepository;
 
     @GetMapping
     public String boards(Model model) {
@@ -42,26 +43,37 @@ public class BoardController {
     }
 
     @GetMapping("/add")
-    public String addForm(@ModelAttribute BoardSaveForm form) {
+    public String addForm(@ModelAttribute BoardSaveForm form, Model model) {
+        model.addAttribute("tags", tagRepository.findAll());
         return "boards/addForm";
     }
 
-    @PostMapping("/add")
-    public String addItem(@Validated @ModelAttribute BoardSaveForm form, BindingResult bindingResult,
-                          RedirectAttributes redirectAttributes) {
+    @PostMapping("/api/add")
+    @ResponseBody
+    public Board addBoard(@RequestBody @Valid BoardSaveForm form, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
-            return "boards/addForm";
+        Board addBoard = boardRepository.save(
+                Board.builder()
+                        .title(form.getTitle())
+                        .build());
+
+        for (Tag tag : form.getTags()) {
+            boardTagRepository.save(
+                    BoardTag.builder()
+                            .board(addBoard)
+                            .tag(tag)
+                            .build());
         }
 
-        Board board = Board.builder()
-                .title(form.getTitle())
-                .build();
+        for (File file : form.getFiles()) {
+            boardFileRepository.save(
+                    BoardFile.builder()
+                            .board(addBoard)
+                            .file(file)
+                            .build());
+        }
 
-        Board savedBoard = boardRepository.save(board);
-
-        redirectAttributes.addAttribute("boardId", savedBoard.getId());
-        return "redirect:/boards/{boardId}";
+        return addBoard;
     }
 
     @GetMapping("/{boardId}/edit")

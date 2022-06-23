@@ -122,7 +122,6 @@ var clickAddTag = () => {
             xhr.setRequestHeader(header, token);
         },
         success: function (data) {
-            console.log(data);
             findBoards();
         },
         error: function (error) {
