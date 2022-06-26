@@ -37,10 +37,13 @@
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
                     <div class="col" th:each="board : ${boards}">
                         <div class="card">
-                            <img th:src="@{/img/test01.jpg}" class="card-img-top" alt="...">
+                            <img th:if="${#lists.size(board.boardFiles) == 0}" th:src="@{/img/test01.jpg}" class="card-img-top" alt="...">
+                            <img th:if="${#lists.size(board.boardFiles) > 0}" th:src="${board.boardFiles[0].file.path}" class="card-img-top" alt="...">
+                            
                             <div class="card-body">
                                 <h5 class="card-title d-flex justify-content-between align-items-center">
-                                    [[${board.title}]]<a th:href="@{/boards/{id} (id=${board.id})}"><i class="bi bi-three-dots"></i></a>
+                                    <span>[[${board.title}]]</span>
+                                    <a th:href="@{/boards/{id} (id=${board.id})}"><i class="bi bi-three-dots"></i></a>
                                 </h5>
                                 <ul class="list-inline">
                                     <li type="button" class="list-inline-item" th:each="tag : ${board.boardTags}" th:onclick="clickAddSearch([[${tag.tag.name}]])">#[[${tag.tag.name}]]</li>
