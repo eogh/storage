@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Optional;
-
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -26,15 +24,7 @@ public class TagController {
     @PostMapping("/api/add")
     @ResponseBody
     public Tag add(@RequestBody @Validated BoardTagForm form, BindingResult bindingResult) {
-
-        Tag tag;
-        Optional<Tag> findTag = tagRepository.findByName(form.getTagName()).stream().findFirst();
-        if (findTag.isEmpty()) {
-            tag = tagRepository.save(Tag.builder().name(form.getTagName()).build());
-        } else {
-            tag = findTag.get();
-        }
-
-        return tag;
+        return tagRepository.findByName(form.getTagName())
+                .orElse(tagRepository.save(Tag.builder().name(form.getTagName()).build()));
     }
 }

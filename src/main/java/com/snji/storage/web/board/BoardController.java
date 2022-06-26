@@ -130,16 +130,11 @@ public class BoardController {
 
         Board board = boardRepository.findById(boardId).orElse(null);
 
-        Tag tag;
-        Optional<Tag> findTag = tagRepository.findByName(form.getTagName()).stream().findFirst();
-        if (findTag.isEmpty()) {
-            tag = tagRepository.save(Tag.builder().name(form.getTagName()).build());
-        } else {
-            tag = findTag.get();
-        }
+        Tag tag = tagRepository.findByName(form.getTagName())
+                .orElse(tagRepository.save(Tag.builder().name(form.getTagName()).build()));
 
         if (board != null) {
-            if (boardTagRepository.findByBoardAndTag(board, tag).isEmpty()) {
+            if (!boardTagRepository.findByBoardAndTag(board, tag).isPresent()) {
                 boardTagRepository.save(BoardTag.builder()
                         .board(board)
                         .tag(tag)
