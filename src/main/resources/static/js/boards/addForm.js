@@ -1,13 +1,19 @@
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
 
-var tags = [];
-var files = [];
+var boardSaveForm = {
+    title: '',
+    tags: [],
+    files: []
+}
+
 // var whatever = '';
 
 const exampleModal = document.getElementById('exampleModal');
 const exampleModalInput = document.getElementById('exampleModalInput');
 const titleInput = document.getElementById('staticTitle');
+const fileInput = document.querySelector('#file-input');
+const preview = document.querySelector('#preview');
 
 // TODO: 태그, 파일 삭제기능
 
@@ -23,8 +29,11 @@ exampleModal.addEventListener('show.bs.modal', event => {
     exampleModalInput.value = '';
 });
 
-var clickAddFile = () => {
-    console.log(`clickAddFile`);
+fileInput.addEventListener('change', () => {
+    const files = Array.from(fileInput.files);
+    // files.forEach(file => {
+    //     console.log(`filename : ${file.name}`);
+    // });
 
     $.ajax({
         type: 'POST',
@@ -37,18 +46,19 @@ var clickAddFile = () => {
         beforeSend: function (xhr) {
             xhr.setRequestHeader(header, token);
         },
-        success: function (file) {
-            let view = `<img src="${file.path}" class="img-thumbnail m-3" style="width: 200px; height: 200px" alt="...">`;
-            $('#staticFiles').append(view);
-
-            files.push(file);
-            // TODO: input창 초기화
+        success: function (results) {
+            results.forEach(result => {
+                preview.innerHTML += `<img src="${result.path}" class="img-thumbnail m-3" style="width: 200px; height: 200px" alt="...">`;
+        
+                boardSaveForm.files.push(result);
+                fileInput.value = null;
+            });
         },
         error: function (e) {
             console.log(e);
         }
     });
-}
+});
 
 var clickAddTag = () => {
     // const boardId = whatever;
@@ -71,7 +81,7 @@ var clickAddTag = () => {
             let view = `<li class="list-inline-item">#${tag.name}</li>`;
             $('#staticTags').before(view);
 
-            tags.push(tag);
+            boardSaveForm.tags.push(tag);
         },
         error: function (error) {
             console.error(`Error: ${error}`);
@@ -81,13 +91,7 @@ var clickAddTag = () => {
 
 var clickAddBoard = () => {
 
-    const inputValue = titleInput.value;
-
-    let boardSaveForm = {
-        title: inputValue,
-        tags: tags,
-        files: files
-    }
+    boardSaveForm.title = titleInput.value;
 
     $.ajax({
         type: 'POST',

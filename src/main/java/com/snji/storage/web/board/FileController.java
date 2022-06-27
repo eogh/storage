@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -28,21 +30,27 @@ public class FileController {
 
     @PostMapping("/add")
     @ResponseBody
-    public File add(@RequestParam("uploadfile") MultipartFile uploadfile) throws IOException {
+    public List<File> add(@RequestParam("uploadfiles") List<MultipartFile> files) throws IOException {
 
-        String originalFilename = uploadfile.getOriginalFilename();
-        String ext = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
-        String newFilename = UUID.randomUUID().toString() + "." + ext;
+        List<File> results = new ArrayList<>();
 
-        java.io.File ioFile = new java.io.File(filesPath + newFilename);
-        uploadfile.transferTo(ioFile);
-        // 썸네일
+        for (MultipartFile file : files) {
+            String originalFilename = file.getOriginalFilename();
+            String ext = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+            String newFilename = UUID.randomUUID().toString() + "." + ext;
 
-        File savedFile = File.builder()
-                .filename(originalFilename)
-                .path(filesUrl + newFilename)
-                .build();
+            java.io.File ioFile = new java.io.File(filesPath + newFilename);
+            file.transferTo(ioFile);
 
-        return fileRepository.save(savedFile);
+            // TODO: 썸네일처리
+
+            File savedFile = fileRepository.save(File.builder()
+                    .filename(originalFilename)
+                    .path(filesUrl + newFilename)
+                    .build());
+            results.add(savedFile);
+        }
+
+        return results;
     }
 }
