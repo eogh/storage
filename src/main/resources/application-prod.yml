@@ -8,4 +8,4 @@ spring:
 storage:
   files:
     url: "/upload/"
-    path: "/upload/"
+    path: "/var/opt/upload/"
