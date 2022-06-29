@@ -10,9 +10,9 @@ const exampleModal = document.getElementById('exampleModal');
 const exampleModalInput = document.getElementById('exampleModalInput');
 const titleInput = document.getElementById('staticTitle');
 const fileInput = document.querySelector('#file-input');
-const preview = document.querySelector('#preview');
 
 window.addEventListener('load', (e) => {
+    renderFiles();
     renderTags();
 });
 
@@ -30,9 +30,6 @@ exampleModal.addEventListener('show.bs.modal', event => {
 
 fileInput.addEventListener('change', () => {
     const files = Array.from(fileInput.files);
-    // files.forEach(file => {
-    //     console.log(`filename : ${file.name}`);
-    // });
 
     $.ajax({
         type: 'POST',
@@ -46,18 +43,34 @@ fileInput.addEventListener('change', () => {
             xhr.setRequestHeader(header, token);
         },
         success: function (results) {
-            results.forEach(result => {
-                preview.innerHTML += `<img src="${result.path}" class="img-thumbnail m-3" style="width: 10rem; height: 10rem" alt="...">`;
-        
+            results.forEach(result => {        
                 _files.push(result);
-                fileInput.value = null;
             });
+            renderFiles();
+            fileInput.value = null;
         },
         error: function (e) {
             console.log(e);
         }
     });
 });
+
+var renderFiles = () => {
+    let view = '';
+
+    view += `<label for="file-input" class="d-flex justify-content-center align-items-center" style="flex: 0 0 auto; width: 8rem; height: 8rem; border: 0.1em solid gray; border-radius: 0.25em;">
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    <i class="bi bi-camera" style="color: gray; font-size: 2em"></i>
+                    <div>${_files.length}/10</div>
+                </div>
+            </label>`;
+
+    _files.forEach(element => {
+        view += `<img src="${element.path}" class="img-thumbnail mx-1" style="flex: 0 0 auto; width: 8rem; height: 8rem" alt="...">`
+    });
+
+    $('#render-files').replaceWith(`<div class="d-flex my-3 py-2" id="render-files" style="flex-wrap: nowrap; overflow-x: auto">${view}</div>`);
+}
 
 var renderTags = () => {
     let view = '';
