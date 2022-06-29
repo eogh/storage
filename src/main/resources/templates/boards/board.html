@@ -43,7 +43,7 @@
 
                 <div class="card-body">
                     <h5 class="card-title d-flex justify-content-between">
-                        [[${board.title}]]
+                        <span>[[${board.title}]]</span>
                         <span>
                             <a th:href="@{/boards/{id}/edit (id=${board.id})}"><i class="bi bi-pencil-square"></i></a>
                             <a th:href="@{/boards/{id}/delete (id=${board.id})}"><i class="bi bi-trash"></i></a>

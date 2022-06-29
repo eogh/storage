@@ -1,11 +1,8 @@
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
 
-var boardSaveForm = {
-    title: '',
-    tags: [],
-    files: []
-}
+var _tags = [];
+var _files = [];
 
 // var whatever = '';
 
@@ -15,7 +12,9 @@ const titleInput = document.getElementById('staticTitle');
 const fileInput = document.querySelector('#file-input');
 const preview = document.querySelector('#preview');
 
-// TODO: 태그, 파일 삭제기능
+window.addEventListener('load', (e) => {
+    renderTags();
+});
 
 exampleModal.addEventListener('show.bs.modal', event => {
     // Button that triggered the modal
@@ -48,9 +47,9 @@ fileInput.addEventListener('change', () => {
         },
         success: function (results) {
             results.forEach(result => {
-                preview.innerHTML += `<img src="${result.path}" class="img-thumbnail m-3" style="width: 200px; height: 200px" alt="...">`;
+                preview.innerHTML += `<img src="${result.path}" class="img-thumbnail m-3" style="width: 10rem; height: 10rem" alt="...">`;
         
-                boardSaveForm.files.push(result);
+                _files.push(result);
                 fileInput.value = null;
             });
         },
@@ -60,38 +59,68 @@ fileInput.addEventListener('change', () => {
     });
 });
 
-var clickAddTag = () => {
-    // const boardId = whatever;
-    const inputValue = exampleModalInput.value;
+var renderTags = () => {
+    let view = '';
 
-    let boardTagForm = {
-        tagName: inputValue
-    }
-    
-    $.ajax({
-        type: 'POST',
-        url: `/tags/api/add`,
-        contentType: 'application/json',
-        // dataType: 'json',
-        data: JSON.stringify(boardTagForm),
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader(header, token);
-        },
-        success: function (tag) {
-            let view = `<li class="list-inline-item">#${tag.name}</li>`;
-            $('#staticTags').before(view);
-
-            boardSaveForm.tags.push(tag);
-        },
-        error: function (error) {
-            console.error(`Error: ${error}`);
-        }
+    _tags.forEach(element => {
+        view += `<li class="list-inline-item mt-1">
+                    <button type="button" class="btn btn-light" onclick="clickDeleteTag(${element.id})">
+                        ${element.name} <i class="bi bi-x-circle text-muted"></i>
+                    </button>
+                </li>`;
     });
+
+    view += `<li class="list-inline-item mt-1">
+                <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-plus-circle text-muted"></i></button>
+            </li>`;
+
+    $('#render-tags').replaceWith(`<ul class="list-inline" id="render-tags">${view}</ul>`);
+}
+
+var clickAddTag = () => {
+    const tagName = exampleModalInput.value;
+
+    if (tagName != '' && _tags.filter(e => e.name === tagName).length == 0) {
+
+        let boardTagForm = {
+            tagName: tagName
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: `/tags/api/add`,
+            contentType: 'application/json',
+            // dataType: 'json',
+            data: JSON.stringify(boardTagForm),
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function (tag) {
+                _tags.push(tag);
+                renderTags();
+            },
+            error: function (error) {
+                console.error(`Error: ${error}`);
+            }
+        });
+    }
+}
+
+var clickDeleteTag = (tagId) => {
+
+    if (tagId) {
+        _tags = _tags.filter(e => e.id !== tagId);
+        renderTags();
+    }
 }
 
 var clickAddBoard = () => {
 
-    boardSaveForm.title = titleInput.value;
+    let boardSaveForm = {
+        title: titleInput.value,
+        tags: _tags,
+        files: _files
+    }
 
     $.ajax({
         type: 'POST',
