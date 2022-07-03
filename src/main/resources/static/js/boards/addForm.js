@@ -55,10 +55,30 @@ fileInput.addEventListener('change', () => {
     });
 });
 
+var clickDeleteFile = (fileId) => {
+    
+    if (fileId) {
+        $.ajax({
+            type: 'DELETE',
+            url: `/files/${fileId}/delete`,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function (fileId) {
+                _files = _files.filter(e => e.id !== fileId);
+                renderFiles();
+            },
+            error: function (error) {
+                console.error(`Error: ${error}`);
+            }
+        });
+    }
+}
+
 var renderFiles = () => {
     let view = '';
 
-    view += `<label for="file-input" class="d-flex justify-content-center align-items-center" style="flex: 0 0 auto; width: 8rem; height: 8rem; border: 0.1em solid gray; border-radius: 0.25em;">
+    view += `<label for="file-input" class="d-flex justify-content-center align-items-center" style="flex: 0 0 auto; width: 8rem; height: 8rem; border: 1px solid var(--bs-border-color); border-radius: 0.25em;">
                 <div class="d-flex flex-column justify-content-center align-items-center">
                     <i class="bi bi-camera" style="color: gray; font-size: 2em"></i>
                     <div>${_files.length}/10</div>
@@ -66,7 +86,8 @@ var renderFiles = () => {
             </label>`;
 
     _files.forEach(element => {
-        view += `<img src="${element.path}" class="img-thumbnail mx-1" style="flex: 0 0 auto; width: 8rem; height: 8rem" alt="...">`
+        view += `<img src="${element.path}" class="img-thumbnail ms-3 me-1" style="flex: 0 0 auto; width: 8rem; height: 8rem" alt="...">
+                <i class="bi bi-x-circle text-muted" onclick="clickDeleteFile(${element.id})"></i>`
     });
 
     $('#render-files').replaceWith(`<div class="d-flex my-3 py-2" id="render-files" style="flex-wrap: nowrap; overflow-x: auto">${view}</div>`);

@@ -53,4 +53,18 @@ public class FileController {
 
         return results;
     }
+
+    @DeleteMapping("{fileId}/delete")
+    @ResponseBody
+    public Long delete(@PathVariable Long fileId) {
+
+        File file = fileRepository.getById(fileId);
+
+        java.io.File ioFile = new java.io.File(file.getPath());
+        ioFile.delete();
+
+        fileRepository.delete(file);
+
+        return fileId;
+    }
 }
