@@ -30,15 +30,17 @@
         
         <div id="resultDiv">
             <div class="container-fluid">
-                <div class="d-flex justify-content-between align-items-center py-1">
+                <div class="d-flex justify-content-between align-items-center my-2">
                     <span>Total: [[${size}]]</span>
-                    <a role="button" class="btn btn-sm btn-primary" th:href="@{/boards/add}">Add</a>
+                    <a role="button" class="btn btn-primary" th:href="@{/boards/add}">Add</a>
                 </div>
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
                     <div class="col" th:each="board : ${boards}">
                         <div class="card">
-                            <img th:if="${#lists.size(board.boardFiles) == 0}" th:src="@{/img/test01.jpg}" class="card-img-top" alt="...">
-                            <img th:if="${#lists.size(board.boardFiles) > 0}" th:src="${board.boardFiles[0].file.path}" class="card-img-top" alt="...">
+                            <a class="p-1" th:href="@{/boards/{id} (id=${board.id})}">
+                                <img th:if="${#lists.size(board.boardFiles) == 0}" th:src="@{/img/test01.jpg}" class="card-img-top" alt="...">
+                                <img th:if="${#lists.size(board.boardFiles) > 0}" th:src="${board.boardFiles[0].file.path}" class="card-img-top" alt="...">
+                            </a>
                             
                             <div class="card-body">
                                 <h5 class="card-title d-flex justify-content-between align-items-center">
