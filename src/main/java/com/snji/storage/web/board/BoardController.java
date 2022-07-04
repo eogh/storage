@@ -83,6 +83,7 @@ public class BoardController {
         }
 
         model.addAttribute("board", board);
+        model.addAttribute("tags", tagRepository.findAll());
         return "boards/editForm";
     }
 

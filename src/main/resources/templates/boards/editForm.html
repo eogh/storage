@@ -5,18 +5,69 @@
 <head th:replace="fragments/common :: html-head"></head>
 
 <body class="d-flex flex-column h-100">
-<header th:replace="fragments/common :: header(title='boards')"></header>
+    <header th:replace="fragments/common :: header(title='boards')"></header>
 
-<main>
-    <div class="container">
+    <main>
+        <datalist id="datalistOptions">
+            <option th:each="tag : ${tags}" th:value="${tag.name}">
+        </datalist>
 
-        <form action="" th:action th:object="${boardSaveForm}" enctype="multipart/form-data" method="post">
-            Edit Form: [[${board.title}]]
-        </form>
-    </div>
-</main>
+        <div class="container py-3">
+            <div class="card" th:object="${board}">
+                <div class="card-body">
+                    <h5 class="card-title">Add Board</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
 
-<footer th:replace="fragments/common :: footer"></footer>
+                    <form id="upload-file-form">
+                        <input type="file" class="form-control d-none" id="file-input" name="uploadfiles" accept="*" multiple="multiple">
+                        <div id="render-files"></div>
+                    </form>
+
+                    <div class="row mb-3">
+                        <label for="staticTitle" class="col-sm-2 col-form-label">Title</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="staticTitle" th:field="*{title}">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Tags</label>
+                        <div class="col-sm-10">
+                            <div id="render-tags"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end my-2">
+                <button type="button" class="btn btn-primary mx-2" th:onclick="clickAddBoard()">Save</button>
+                <a role="button" class="btn btn-secondary" th:href="@{/boards}">Cancel</a>
+            </div>
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Tag</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control" list="datalistOptions" id="exampleModalInput" placeholder="Type to search...">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" th:onclick="clickAddTag()">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script th:inline="javascript">
+        var tags = [[${board.boardTags}]];
+    </script>
+    <footer th:replace="fragments/common :: footer"></footer>
+    <script src="/js/boards/editForm.js"></script>
 </body>
 
 </html>
