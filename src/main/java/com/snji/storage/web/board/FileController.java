@@ -1,5 +1,7 @@
 package com.snji.storage.web.board;
 
+import com.snji.storage.domain.board.BoardFile;
+import com.snji.storage.domain.board.BoardFileRepository;
 import com.snji.storage.domain.board.File;
 import com.snji.storage.domain.board.FileRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class FileController {
     @Value("${storage.files.url}")
     private String filesUrl;
 
+    private final BoardFileRepository boardFileRepository;
     private final FileRepository fileRepository;
 
     @PostMapping("/add")
@@ -63,6 +66,10 @@ public class FileController {
         java.io.File ioFile = new java.io.File(file.getPath());
         ioFile.delete();
 
+        List<BoardFile> boardFiles = boardFileRepository.findAllByFile(file);
+        for (BoardFile boardFile : boardFiles) {
+            boardFileRepository.delete(boardFile);
+        }
         fileRepository.delete(file);
 
         return fileId;
