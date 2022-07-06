@@ -4,7 +4,6 @@ import com.snji.storage.domain.board.*;
 import com.snji.storage.web.board.form.BoardSaveForm;
 import com.snji.storage.web.board.form.BoardSearchCond;
 import com.snji.storage.web.board.form.BoardTagForm;
-import com.snji.storage.web.board.form.BoardUpdateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -77,19 +76,9 @@ public class BoardController {
 
     @GetMapping("/{boardId}/edit")
     public String editForm(@PathVariable Long boardId, Model model) {
-        Board board = boardRepository.findById(boardId).orElse(null);
-        if (board == null) {
-            return "";
-        }
-
-        model.addAttribute("board", board);
+        model.addAttribute("board", boardRepository.findById(boardId).orElse(null));
         model.addAttribute("tags", tagRepository.findAll());
         return "boards/editForm";
-    }
-
-    @PostMapping("/{itemId}/edit")
-    public String edit(@PathVariable Long boardId, @Validated @ModelAttribute BoardUpdateForm form, BindingResult bindingResult) {
-        return "";
     }
 
     @GetMapping("/{boardId}/delete")

@@ -22,7 +22,7 @@ public class BoardTag {
     @JoinColumn(name = "BOARD_ID")
     private Board board;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TAG_ID")
     private Tag tag;
 }
