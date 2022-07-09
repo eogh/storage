@@ -1,6 +1,8 @@
 package com.snji.storage.web.board;
 
 import com.snji.storage.domain.board.*;
+import com.snji.storage.domain.file.UploadFile;
+import com.snji.storage.domain.file.UploadFileRepository;
 import com.snji.storage.web.board.form.BoardSaveForm;
 import com.snji.storage.web.board.form.BoardSearchCond;
 import com.snji.storage.web.board.form.BoardTagForm;
@@ -25,7 +27,7 @@ public class BoardController {
     private final BoardTagRepository boardTagRepository;
     private final TagRepository tagRepository;
     private final BoardFileRepository boardFileRepository;
-    private final FileRepository fileRepository;
+    private final UploadFileRepository uploadFileRepository;
 
     @GetMapping
     public String boards(Model model) {
@@ -63,7 +65,7 @@ public class BoardController {
                             .build());
         }
 
-        for (File file : form.getFiles()) {
+        for (UploadFile file : form.getFiles()) {
             boardFileRepository.save(
                     BoardFile.builder()
                             .board(addBoard)

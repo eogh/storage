@@ -7,5 +7,5 @@ spring:
 
 storage:
   files:
-    url: "/upload/"
-    path: "/var/opt/upload/"
+    url: "/storage/"
+    path: "/var/opt/storage/"

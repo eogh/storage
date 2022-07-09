@@ -2,6 +2,7 @@ package com.snji.storage.domain.board;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.snji.storage.domain.BaseTimeEntity;
+import com.snji.storage.domain.file.UploadFile;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,5 +26,5 @@ public class BoardFile extends BaseTimeEntity {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "FILE_ID")
-    private File file;
+    private UploadFile file;
 }
