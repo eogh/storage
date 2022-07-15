@@ -98,6 +98,7 @@ public class BoardController {
         return "redirect:/boards";
     }
 
+    // TODO: 10개씩 페이징처리
     @GetMapping("/api/list")
     public String findBoards(Model model, BoardSearchCond condition) {
         log.info("condition.getTags() : {}", condition.getTags());

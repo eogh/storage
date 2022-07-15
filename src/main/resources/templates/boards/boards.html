@@ -39,7 +39,7 @@
                         <div class="card h-100">
                             <a class="d-flex align-items-center h-100 p-1" th:href="@{/boards/{id} (id=${board.id})}">
                                 <img th:if="${#lists.size(board.boardFiles) == 0}" th:src="@{/img/test01.jpg}" class="card-img" alt="...">
-                                <img th:if="${#lists.size(board.boardFiles) > 0}" th:src="${board.boardFiles[0].file.path}" class="card-img" alt="...">
+                                <img th:if="${#lists.size(board.boardFiles) > 0}" th:src="${board.boardFiles[0].file.thumbnailPath}" class="card-img" alt="...">
                             </a>
                             
                             <div class="card-body">
