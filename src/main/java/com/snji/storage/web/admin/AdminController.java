@@ -7,6 +7,8 @@ import com.snji.storage.domain.board.BoardRepository;
 import com.snji.storage.domain.file.UploadFile;
 import com.snji.storage.domain.file.UploadFileRepository;
 import com.snji.storage.domain.file.UploadFileService;
+import com.snji.storage.domain.job.Job;
+import com.snji.storage.domain.job.JobRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,12 +21,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -44,6 +48,7 @@ public class AdminController {
     private final BoardFileRepository boardFileRepository;
     private final UploadFileRepository uploadFileRepository;
     private final UploadFileService uploadFileService;
+    private final JobRepository jobRepository;
 
     @GetMapping
     public String admin() {
@@ -59,14 +64,18 @@ public class AdminController {
 
         Path originalDir = Paths.get(filesPath,"direct", "original");
         Pattern pattern = Pattern.compile("^-[0-9]{3}$");
-//        final Instant maxCreationTime = LocalDateTime.of(2022, 1, 1, 0, 0).toInstant(ZoneOffset.UTC);
 
+        Job lastCompletedJob = jobRepository.findTopByJobKeyOrderByJobValueDesc("BOARD_SYNC");
+        long lastCompletedJobTime = lastCompletedJob != null ? Long.parseLong(lastCompletedJob.getJobValue()) : 0L;
+        log.info("lastCompletedJobTime : {}", lastCompletedJobTime);
+
+        // 폴더 하위에 있는 모든 파일을 찾아온다.
         Map<Object, List<Path>> collect = Files.walk(originalDir)
                 .filter(Files::isRegularFile)               // 일반적인 파일 필터
                 .filter(path -> {                           // 특정시간 이후 생성된 파일 필터
                     try {
                         BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
-                        return attributes.creationTime().toInstant().isAfter(LocalDateTime.now().minusMonths(1).toInstant(ZoneOffset.UTC));
+                        return attributes.creationTime().toMillis() > lastCompletedJobTime;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -89,13 +98,15 @@ public class AdminController {
                     return toPath;
                 }));
 
-//        collect.forEach((group, paths) -> {
-//            log.info("\n group : {}", group);
-//            for (Path path : paths) {
-//                log.info("path : {}", path.toAbsolutePath());
-//            }
-//        });
+        log.info("collect size : {}", collect.size());
+        if (collect.size() == 0) return "redirect:/admin";
 
+        Job jobInfo = jobRepository.save(Job.builder()
+                .jobKey("BOARD_SYNC")
+                .completed(false)
+                .build());
+
+        // 찾아온 파일로 게시판을 만든다.
         collect.forEach((group, paths) -> {
             Board board = boardRepository.save(Board.builder()
                     .title("board_" + LocalDate.now())
@@ -106,8 +117,6 @@ public class AdminController {
                 String storeFileName = uploadFileService.createStoreFileName(originalFilename);
 
                 try {
-//                    FileTime creationTime = (FileTime) Files.getAttribute(path, "creationTime");
-
                     String thumbnailPath = null;
                     if (true) { // TODO: getContentType 체크해서 image인 경우만 동작하도록
                         thumbnailPath = Paths.get(path.getParent().toString().replace("original", "thumbnail"), storeFileName).toString();
@@ -115,7 +124,6 @@ public class AdminController {
                         uploadFileService.createThumbnail(path.toAbsolutePath().toString(), thumbnailPath);
                     }
 
-//                    log.info("path : {}", path.toAbsolutePath());
                     UploadFile uploadFile = uploadFileRepository.save(UploadFile.builder()
                             .filename(path.getFileName().toString())
                             .path(uploadFileService.pathToUrl(path.toAbsolutePath().toString()))
@@ -129,8 +137,22 @@ public class AdminController {
             }
         });
 
-        // TODO: 전부 성공하면, 파일중에 생성시간이 가장 늦은 값을 저장한다.
+        // 저장될 파일 중 생성일이 가장 늦은 시간을 찾아서 저장한다.
+        Path lastCreatedPath = Files.walk(originalDir).max(Comparator.comparing(path -> {
+            FileTime fileTime = null;
+            try {
+                fileTime = Files.readAttributes(path, BasicFileAttributes.class).creationTime();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return fileTime != null ? fileTime.toMillis() : 0;
+        })).orElseThrow(NoSuchElementException::new);
+        Long lastCreatedTime = Files.readAttributes(lastCreatedPath, BasicFileAttributes.class).creationTime().toMillis();
 
-        return "admin/admin";
+        jobInfo.setJobValue(String.valueOf(lastCreatedTime));
+        jobInfo.setCompleted(true);
+        jobRepository.flush();
+
+        return "redirect:/admin";
     }
 }
