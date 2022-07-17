@@ -22,6 +22,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -71,23 +72,31 @@ public class AdminController {
                     }
                     return false;
                 })
+                .sorted(Comparator.comparing(Path::toAbsolutePath))
                 .collect(Collectors.groupingBy(path -> {    // ex) -001, -002 등 으로 끝나는 파일명 끼리 Grouping
                     String toPath = path.toAbsolutePath().toString();
                     int posDash = toPath.lastIndexOf("-");
-                    int posComma = toPath.lastIndexOf(".");
 
-                    if (posDash > 0 && posComma > 0) {
-                        String substring = toPath.substring(posDash, posComma);
-                        if (pattern.matcher(substring).matches()) { // substring된 문자열이 정규식패턴과 일치하면 True
-                            return toPath.substring(0, posDash);
+                    if (posDash > 0) {
+                        String substring1 = toPath.substring(posDash); // ex) -001.jpg, -001.jpg.jpg
+                        if (substring1.length() >= 4) {
+                            String substring2 = substring1.substring(0, 4); // ex) -001, -002
+                            if (pattern.matcher(substring2).matches()) { // substring된 문자열이 정규식패턴과 일치하면 True
+                                return toPath.substring(0, posDash);
+                            }
                         }
                     }
                     return toPath;
                 }));
 
+//        collect.forEach((group, paths) -> {
+//            log.info("\n group : {}", group);
+//            for (Path path : paths) {
+//                log.info("path : {}", path.toAbsolutePath());
+//            }
+//        });
 
         collect.forEach((group, paths) -> {
-//            log.info("\n group : {}", group);
             Board board = boardRepository.save(Board.builder()
                     .title("board_" + LocalDate.now())
                     .build());

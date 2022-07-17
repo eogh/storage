@@ -21,10 +21,10 @@ public class Job extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String key;
+    private String jobKey;
 
     @Column
-    private String value;
+    private String jobValue;
 
     @Column(nullable = false)
     private boolean completed;
