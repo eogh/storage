@@ -28,36 +28,12 @@
             </div>
         </div>
         
-        <div id="resultDiv">
-            <div class="container-fluid">
-                <div class="d-flex justify-content-between align-items-center my-2">
-                    <span>Total: [[${size}]]</span>
-                    <a role="button" class="btn btn-primary" th:href="@{/boards/add}">Add</a>
-                </div>
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 g-3">
-                    <div class="col" th:each="board : ${boards}">
-                        <div class="card h-100">
-                            <a class="d-flex align-items-center h-100 p-1" th:href="@{/boards/{id} (id=${board.id})}">
-                                <img th:if="${#lists.size(board.boardFiles) == 0}" th:src="@{/img/test01.jpg}" class="card-img" alt="...">
-                                <img th:if="${#lists.size(board.boardFiles) > 0}" th:src="${board.boardFiles[0].file.thumbnailPath}" class="card-img" alt="...">
-                            </a>
-                            
-                            <div class="card-body">
-                                <h5 class="card-title d-flex justify-content-between align-items-center">
-                                    <span>[[${board.title}]]</span>
-                                    <a th:href="@{/boards/{id} (id=${board.id})}"><i class="bi bi-three-dots"></i></a>
-                                </h5>
-                                <ul class="list-inline">
-                                    <li type="button" class="list-inline-item" th:each="tag : ${board.boardTags}" th:onclick="clickAddSearch([[${tag.tag.name}]])">#[[${tag.tag.name}]]</li>
-                                    <li type="button" class="list-inline-item" data-bs-toggle="modal" data-bs-target="#exampleModal" th:data-bs-whatever="${board.id}">
-                                        <i class="bi bi-plus-circle"></i>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center my-2">
+                <span><!--Total: aa--></span>
+                <a role="button" class="btn btn-primary" th:href="@{/boards/add}">Add</a>
             </div>
+            <div id="render" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 g-3"></div>
         </div>
 
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

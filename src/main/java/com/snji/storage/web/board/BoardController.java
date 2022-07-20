@@ -8,6 +8,8 @@ import com.snji.storage.web.board.form.BoardSearchCond;
 import com.snji.storage.web.board.form.BoardTagForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -98,21 +100,16 @@ public class BoardController {
         return "redirect:/boards";
     }
 
-    // TODO: 10개씩 페이징처리
     @GetMapping("/api/list")
-    public String findBoards(Model model, BoardSearchCond condition) {
+    @ResponseBody
+    public Page<Board> findBoards(BoardSearchCond condition, Pageable pageable) {
         log.info("condition.getTags() : {}", condition.getTags());
 
-        List<Board> list;
-        if (condition.getTags() == null) {
-            list = boardRepository.findAll();
-        } else {
-            list = boardRepository.search(condition.getTags(), condition.getTags().size());
+        if (condition.getTags() != null) {
+            List<Long> boardIds = boardTagRepository.findByTagNameIn(condition.getTags(), condition.getTags().size());
+            return boardRepository.findByIdIn(boardIds, pageable);
         }
-        model.addAttribute("boards", list);
-        model.addAttribute("size", list.size());
-
-        return "/boards/boards :: #resultDiv";
+        return boardRepository.findAll(pageable);
     }
 
     @PostMapping("/api/{boardId}/tags/add")
