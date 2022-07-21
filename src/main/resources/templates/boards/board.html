@@ -50,7 +50,7 @@
                         </span>
                     </h5>
                     <ul class="list-inline">
-                        <li class="list-inline-item" th:each="tag : ${board.boardTags}">#[[${tag.tag.name}]]</li>
+                        <li class="list-inline-item" th:each="tag : ${board.boardTags}">[[${tag.tag.name}]]</li>
                         <li type="button" class="list-inline-item" data-bs-toggle="modal" data-bs-target="#exampleModal" th:data-bs-whatever="${board.id}">
                             <i class="bi bi-plus-circle"></i>
                         </li>
