@@ -87,7 +87,7 @@ var render = (boards) => {
 
         let tagView = '';
         board.boardTags.forEach(tag => {
-            tagView += `<li type="button" class="list-inline-item" onclick="clickAddSearch(${tag.tag.name})">${tag.tag.name}</li>`;
+            tagView += `<li type="button" class="list-inline-item" onclick="clickAddSearch('${tag.tag.name}')">${tag.tag.name}</li>`;
         });
 
         view += `<div class="col">

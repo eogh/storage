@@ -5,8 +5,8 @@ spring:
 
   servlet:
     multipart:
-      maxFileSize: 10MB     # 한개 파일 최대 용량
-      maxRequestSize: 100MB # 한번 업로드 최대 용량
+      maxFileSize: 100MB     # 한개 파일 최대 용량
+      maxRequestSize: 1000MB # 한번 업로드 최대 용량
 
   jpa:
     hibernate:

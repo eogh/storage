@@ -1,9 +1,6 @@
 package com.snji.storage.web.admin;
 
-import com.snji.storage.domain.board.Board;
-import com.snji.storage.domain.board.BoardFile;
-import com.snji.storage.domain.board.BoardFileRepository;
-import com.snji.storage.domain.board.BoardRepository;
+import com.snji.storage.domain.board.*;
 import com.snji.storage.domain.file.UploadFile;
 import com.snji.storage.domain.file.UploadFileRepository;
 import com.snji.storage.domain.file.UploadFileService;
@@ -16,19 +13,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -45,6 +37,8 @@ public class AdminController {
     private String filesUrl;
 
     private final BoardRepository boardRepository;
+    private final BoardTagRepository boardTagRepository;
+    private final TagService tagService;
     private final BoardFileRepository boardFileRepository;
     private final UploadFileRepository uploadFileRepository;
     private final UploadFileService uploadFileService;
@@ -106,11 +100,38 @@ public class AdminController {
                 .completed(false)
                 .build());
 
+        /*
+        collect.forEach((group, paths) -> {
+            String value = String.valueOf(group);
+            String filename = value.substring(value.lastIndexOf(File.separator) + 1);
+            log.info("filename : {}", filename);
+            for (Path path : paths) {
+                log.info("path : {}", path.toAbsolutePath());
+                String[] folders = pathToFolders(path.toAbsolutePath().toString());
+                for (String folder : folders) {
+                    log.info(folder);
+                }
+            }
+        });
+        if (true) {
+            return "redirect:/admin";
+        }
+        */
+
         // 찾아온 파일로 게시판을 만든다.
         collect.forEach((group, paths) -> {
+            String value = String.valueOf(group);
+            String filename = value.substring(value.lastIndexOf(File.separator) + 1);
+
             Board board = boardRepository.save(Board.builder()
-                    .title("board_" + LocalDate.now())
+                    .title(filename)
                     .build());
+
+            String[] folders = pathToFolders(value);
+            for (String folder : folders) {
+                Tag tag = tagService.add(folder);
+                boardTagRepository.save(BoardTag.builder().board(board).tag(tag).build());
+            }
 
             for (Path path : paths) {
                 String originalFilename = path.getFileName().toString();
@@ -154,5 +175,16 @@ public class AdminController {
         jobRepository.flush();
 
         return "redirect:/admin";
+    }
+
+    /**
+     * 경로에서 폴더명을 추출한다.
+     * @param path
+     * @return
+     */
+    private String[] pathToFolders(String path) {
+        String splitRegex = Pattern.quote(System.getProperty("file.separator"));
+        String[] strings = path.split(splitRegex);
+        return Arrays.copyOfRange(strings, 4, strings.length - 1);
     }
 }

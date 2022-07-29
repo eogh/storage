@@ -28,6 +28,7 @@ public class BoardController {
     private final BoardRepository boardRepository;
     private final BoardTagRepository boardTagRepository;
     private final TagRepository tagRepository;
+    private final TagService tagService;
     private final BoardFileRepository boardFileRepository;
     private final UploadFileRepository uploadFileRepository;
 
@@ -118,9 +119,7 @@ public class BoardController {
                                @RequestBody @Validated BoardTagForm form, BindingResult bindingResult) {
 
         Board board = boardRepository.findById(boardId).orElse(null);
-
-        Tag tag = tagRepository.findByName(form.getTagName())
-                .orElseGet(() -> tagRepository.save(Tag.builder().name(form.getTagName()).build()));
+        Tag tag = tagService.add(form.getTagName());
 
         if (board != null) {
             if (!boardTagRepository.findByBoardAndTag(board, tag).isPresent()) {

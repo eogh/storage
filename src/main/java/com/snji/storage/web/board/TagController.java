@@ -1,7 +1,7 @@
 package com.snji.storage.web.board;
 
 import com.snji.storage.domain.board.Tag;
-import com.snji.storage.domain.board.TagRepository;
+import com.snji.storage.domain.board.TagService;
 import com.snji.storage.web.board.form.BoardTagForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/tags")
 public class TagController {
 
-    private final TagRepository tagRepository;
+    private final TagService tagService;
 
     @PostMapping("/api/add")
     @ResponseBody
     public Tag add(@RequestBody @Validated BoardTagForm form, BindingResult bindingResult) {
-        return tagRepository.findByName(form.getTagName())
-                .orElseGet(() -> tagRepository.save(Tag.builder().name(form.getTagName()).build()));
+        return tagService.add(form.getTagName());
     }
 }

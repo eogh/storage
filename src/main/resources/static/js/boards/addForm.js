@@ -81,7 +81,7 @@ var renderFiles = () => {
     view += `<label for="file-input" class="d-flex justify-content-center align-items-center" style="flex: 0 0 auto; width: 12rem; height: 9rem; border: 1px solid var(--bs-border-color); border-radius: 0.25em;">
                 <div class="d-flex flex-column justify-content-center align-items-center">
                     <i class="bi bi-camera" style="color: gray; font-size: 2em"></i>
-                    <div>${_files.length}/10</div>
+                    <div>${_files.length}/1000</div>
                 </div>
             </label>`;
 
