@@ -185,6 +185,6 @@ public class AdminController {
     private String[] pathToFolders(String path) {
         String splitRegex = Pattern.quote(System.getProperty("file.separator"));
         String[] strings = path.split(splitRegex);
-        return Arrays.copyOfRange(strings, 4, strings.length - 1);
+        return Arrays.copyOfRange(strings, Arrays.asList(strings).indexOf("original") + 1, strings.length - 1);
     }
 }
