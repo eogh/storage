@@ -15,39 +15,37 @@
         <div class="container py-3">
             <div class="card" th:object="${board}">
                 <div id="carouselIndicators" class="carousel slide p-1" data-bs-ride="true">
-                    <div class="carousel-indicators">
+                    <div class="carousel-indicators" style="background-color: rgba(0, 0, 0, 0.5); border-radius: 0.25em">
                         <button type="button" data-bs-target="#carouselIndicators"
                             th:each="file,index : ${board.boardFiles}" th:data-bs-slide-to="${index.index}"
-                            th:classappend="${index.index == 0} ? active"></button>
+                            th:classappend="${index.index == 0} ? active"
+                            style="width: 40px; height: 5px"></button>
                     </div>
 
                     <div class="carousel-inner">
                         <div class="carousel-item" 
                             th:each="file,index : ${board.boardFiles}"
                             th:classappend="${index.index == 0} ? active">
-                            <img th:src="${file.file.path}" class="d-block w-100" alt="...">
+                            <img th:src="${file.file.path}" class="d-block" style="max-width: 100%; max-height: 75vh; margin: 0 auto;" alt="...">
                         </div>
                     </div>
     
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselIndicators"
                         data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="carousel-control-prev-icon" style="background-color: black; border-radius: 0.25em;" aria-hidden="true"></span>
                         <span class="visually-hidden">Previous</span>
                     </button>
                     <button class="carousel-control-next" type="button" data-bs-target="#carouselIndicators"
                         data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="carousel-control-next-icon" style="background-color: black; border-radius: 0.25em;" aria-hidden="true"></span>
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>
 
                 <div class="card-body">
                     <h5 class="card-title d-flex justify-content-between">
-                        <span>[[${board.title}]]</span>
-                        <span>
-                            <a th:href="@{/boards/{id}/edit (id=${board.id})}"><i class="bi bi-pencil-square"></i></a>
-                            <a th:href="@{/boards/{id}/delete (id=${board.id})}"><i class="bi bi-trash"></i></a>
-                        </span>
+                        <span class="text-truncate">[[${board.title}]]</span>
+                        <span><i class="bi bi-download"></i></span>
                     </h5>
                     <ul class="list-inline">
                         <li class="list-inline-item" th:each="tag : ${board.boardTags}">[[${tag.tag.name}]]</li>
@@ -57,8 +55,14 @@
                     </ul>
                 </div>
             </div>
-            <div class="d-flex justify-content-end my-2">
-                <a role="button" class="btn btn-secondary" th:href="@{/boards}">Back</a>
+            <div class="d-flex justify-content-between my-2">
+                <div>
+                    <a role="button" class="btn btn-secondary" th:href="@{/boards}">Back</a>
+                </div>
+                <div>
+                    <a role="button" class="btn btn-primary me-1" th:href="@{/boards/{id}/edit (id=${board.id})}">Edit</a>
+                    <a role="button" class="btn btn-danger" th:href="@{/boards/{id}/delete (id=${board.id})}">Remove</a>
+                </div>
             </div>
         </div>
 

@@ -96,7 +96,7 @@ var render = (boards) => {
                             <img src="${thumbnailPath}" class="card-img" alt="...">
                         </a>
                         <div class="card-body">
-                            <h5 class="card-title d-flex justify-content-between align-items-center"><span class="text-truncate">${board.title}</span></h5>
+                            <h5 class="card-title d-flex justify-content-between align-items-center"><span class="text-truncate">${board.title}</span><i class="bi bi-download"></i></h5>
                             <ul class="list-inline">
                                 ${tagView}
                                 <li type="button" class="list-inline-item" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="${board.id}">
