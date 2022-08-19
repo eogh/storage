@@ -12,12 +12,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StreamUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Slf4j
 @Controller
@@ -133,5 +141,46 @@ public class BoardController {
         }
 
         return "success";
+    }
+
+    @GetMapping("/downloadZipFile")
+    public void downloadZipFile(HttpServletResponse response, @RequestParam("boardIds") List<Long> boardIds) {
+
+        String zipName = "storage.zip";
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/zip");
+        response.addHeader("content-Disposition", "attachment; filename=" + zipName);
+
+        ZipOutputStream zos = null;
+        FileInputStream fis = null;
+
+        try {
+            zos = new ZipOutputStream(response.getOutputStream());
+
+            List<File> files = new ArrayList<>();
+            List<Board> boards = boardRepository.findAllById(boardIds);
+            for (Board board : boards) {
+                for (BoardFile boardFile : board.getBoardFiles()) {
+                    files.add(new File(boardFile.getFile().getPath()));
+                }
+            }
+
+            for (File file : files) {
+                zos.putNextEntry(new ZipEntry(file.getName()));
+                fis = new FileInputStream(file);
+
+                StreamUtils.copy(fis, zos);
+
+                fis.close();
+                zos.closeEntry();
+            }
+            zos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            try { if (zos != null) zos.closeEntry(); } catch (IOException e1) { e1.printStackTrace(); }
+            try { if (zos != null) zos.close(); } catch (IOException e2) { e2.printStackTrace(); }
+            try { if (fis != null) fis.close(); } catch (IOException e3) { e3.printStackTrace(); }
+        }
     }
 }
